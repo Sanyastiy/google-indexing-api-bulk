@@ -1,6 +1,8 @@
 # google-indexing-api-bulk
 
 Created by Steve at [Journey Further SEO](https://www.journeyfurther.com/)
+Uploaded in Github by swalker-888
+Upgraded by Sanyastiy
 
 Requires node.js - https://nodejs.org/en/download/
 
