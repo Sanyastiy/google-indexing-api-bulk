@@ -30,7 +30,7 @@ const batchAll = fs
   .toString()
   .split('\n');
 // set first url index in current pack to send
-let batchIndexFirst = parseInt(fs.readFileSync('Index.txt'));
+let batchIndexFirst = parseInt(fs.readFileSync('index.txt'));
 // catcher for end of mission
 if (batchAll.length < batchIndexFirst) {
   console.error(' Seems all URLs passed. Current Index is bigger, than sizeof batchAll. Setup 0 in Index.txt file ');
