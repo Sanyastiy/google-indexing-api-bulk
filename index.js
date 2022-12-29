@@ -33,14 +33,14 @@ const batchAll = fs
 let batchIndexFirst = parseInt(fs.readFileSync('index.txt'));
 // catcher for end of mission
 if (batchAll.length < batchIndexFirst) {
-  console.error(' Seems all URLs passed. Current Index is bigger, than sizeof batchAll. Setup 0 in Index.txt file ');
+  console.error(' Seems all URLs passed. Current Index is bigger, than sizeof batchAll. Setup 0 in index.txt file ');
   return;
 }
 
 // set last url index in current pack to send 
 let batchIndexLast = batchIndexFirst + howMuchUrls;
 // save last url index in file, that will be first index in next pack
-fs.writeFileSync('Index.txt', batchIndexLast.toString());
+fs.writeFileSync('index.txt', batchIndexLast.toString());
 // set batch variable with selected indexes
 let batch = batchAll.slice(batchIndexFirst, batchIndexLast);
 // sum of sent urls
@@ -167,7 +167,7 @@ jwtClient.authorize(function (err, tokens) {
           myDebugging?console.log('candidateJSON: ' + candidateJSON):"";
 
           // if we see quota exceed, roll back count of this batch, and quit the circle
-          fs.writeFileSync('Index.txt', (batchIndexLast - howMuchUrls).toString());
+          fs.writeFileSync('index.txt', (batchIndexLast - howMuchUrls).toString());
           break;
         }
 
