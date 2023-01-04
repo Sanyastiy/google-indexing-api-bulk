@@ -1,8 +1,9 @@
-// Legacy block
-const fs = require('fs');
-let request = require('request');
-let { google } = require('googleapis');
-let key = require('./service_account.json');
+// Legacy(hehe) block 
+const fs = require('fs'); // to read txt file properly
+const clc = require('cli-color'); // for console colors
+const request = require('request'); // core
+const { google } = require('googleapis'); // core
+const key = require('./service_account.json'); //keyfile
 
 const jwtClient = new google.auth.JWT(
   key.client_email,
@@ -19,7 +20,7 @@ const jwtClient = new google.auth.JWT(
 // Enable Debug console outputs for manual debug purposes
 const myDebugging = false;
 // amount of URLs per batch (limitation per operation is 100 per batch, 200 per day or 24h)
-const howMuchUrls = 100;
+const howMuchUrls = 10;
 
 // END of Control panel
 
@@ -82,9 +83,9 @@ jwtClient.authorize(function (err, tokens) {
 
   request(options, (err, resp, body) => {
     // without developing current state of index.txt is 300
-    myDebugging?console.log(body):"";
-    
-    let displayArray = ['Status', 'Url or message'];
+    myDebugging ? console.log(body) : "";
+
+    let displayArray = ['Status', 'Url or message'], errorCatcher = false;
 
     function myExtractJSON(str) {
       // making string in one line without breaks
@@ -95,17 +96,17 @@ jwtClient.authorize(function (err, tokens) {
 
       // enter the loop while we have Closing Brackets inside of the string
       while (firstClose !== -1) {
-        myDebugging?console.log('str: '+str):"";
+        myDebugging ? console.log('str: ' + str) : "";
 
         // set position of first Closing Bracket
         firstClose = str.indexOf('}');
-        myDebugging?console.log('firstClose index: '+firstClose):"";
-        
+        myDebugging ? console.log('firstClose index: ' + firstClose) : "";
+
         // set buffer as str from beginning to first Close Bracket (+1 means including Closing Bracket )
         buffer = str.substring(0, firstClose + 1);
 
-        myDebugging?console.log('around firstClose: '+ str.substring(firstClose-20, firstClose + 20)):"";
-        myDebugging?console.log('buffer: '+buffer):"";
+        myDebugging ? console.log('around firstClose: ' + str.substring(firstClose - 20, firstClose + 20)) : "";
+        myDebugging ? console.log('buffer: ' + buffer) : "";
 
         // if only Closing Bracket (with spaces) inside of the buffer then
         if (buffer == '}') {
@@ -123,13 +124,13 @@ jwtClient.authorize(function (err, tokens) {
         // candidate now is only 1 JSON (+1 with Closing Bracket for correct parse )
         candidate = str.substring(lastOpen, firstClose + 1);
 
-        myDebugging?console.log('candidate: ' + candidate):"";
+        myDebugging ? console.log('candidate: ' + candidate) : "";
 
         // check for JSON validity
         try {
-          console.log((JSON.parse(candidate) ? myDebugging?'JSON candidate valid':"" : 'How did you get here'));
+          console.log((JSON.parse(candidate) ? myDebugging ? 'JSON candidate valid' : "" : 'How did you get here'));
         } catch (error) {
-          myDebugging?console.error('JSON candidate not parsable'):"";
+          myDebugging ? console.error('JSON candidate not parsable') : "";
         }
 
         // cut checked part of the string
@@ -143,7 +144,7 @@ jwtClient.authorize(function (err, tokens) {
           candidateJSON = JSON.parse(candidate);
         } catch (error) {
           // if not parsable, message, then next loop
-          myDebugging?console.log('JSON candidate still not parsable'):"";
+          myDebugging ? console.log('JSON candidate still not parsable') : "";
           // go to next loop
           continue;
         }
@@ -152,32 +153,43 @@ jwtClient.authorize(function (err, tokens) {
         if (candidateJSON.type == 'URL_UPDATED') {
 
           displayArray.push([JSON.stringify(candidateJSON.type), JSON.stringify(candidateJSON.url)])
-          myDebugging?console.log('candidateJSON: ' + candidateJSON):"";
-          
+          myDebugging ? console.log('candidateJSON: ' + candidateJSON) : "";
+
         } else if (candidateJSON.status == 'PERMISSION_DENIED') {
           // here was tested error if in GSC service account is not Owner
 
-          displayArray.push([JSON.stringify(candidateJSON.status), JSON.stringify(candidateJSON.message)])
-          myDebugging?console.log('candidateJSON: ' + candidateJSON):"";
+          displayArray = ([JSON.stringify(candidateJSON.message)])
+          myDebugging ? console.log('candidateJSON: ' + candidateJSON) : "";
+          fs.writeFileSync('index.txt', (batchIndexLast - howMuchUrls).toString());
+          errorCatcher = true;
+          break;
 
         } else if (candidateJSON.quota_limit_value == '200') {
 
           // here was tested error if quota limit exceeded
           displayArray.push(['RATE_LIMIT_EXCEEDED', 'quota_limit_value:' + JSON.stringify(candidateJSON.quota_limit_value)])
-          myDebugging?console.log('candidateJSON: ' + candidateJSON):"";
+          myDebugging ? console.log('candidateJSON: ' + candidateJSON) : "";
 
           // if we see quota exceed, roll back count of this batch, and quit the circle
           fs.writeFileSync('index.txt', (batchIndexLast - howMuchUrls).toString());
           break;
-        }
 
+        } else if (candidateJSON.description == 'Google developers console API activation') {
+
+          // here was tested error if Indexing API is not enabled
+          displayArray = (['Indexing API SERVICE_DISABLED']);
+          fs.writeFileSync('index.txt', (batchIndexLast - howMuchUrls).toString());
+          errorCatcher = true;
+          break;
+
+        }
         ++resultCounter;
       }
     }
 
     // End report
     myExtractJSON(body);
-    console.log(displayArray);
+    errorCatcher ? console.log(clc.bgRed(displayArray)) : console.log(displayArray);
     console.info('Task Done. URLs sent: ', resultCounter);
   });
 });
