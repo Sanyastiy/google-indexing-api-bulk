@@ -43,6 +43,8 @@ Then...
 
 200 URLs per day
 
+Cron perfect in every 1 url every 8 minutes.
+
 ## Fast start CLI
 
 npm install requests; npm audit fix; npm audit fix --force; node index.js
