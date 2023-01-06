@@ -9,8 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cli-color": "^2.0.3",
     "fs": "0.0.1-security",
-    "googleapis": "^46.0.0",
-    "request": "^2.88.0"
+    "googleapis": "^110.0.0",
+    "request": "^2.88.0",
+    "requests": "^0.3.0"
   }
 }
