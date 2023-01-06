@@ -42,3 +42,7 @@ Then...
 100 URLs per request batch
 
 200 URLs per day
+
+## Fast start CLI
+
+npm install requests; npm audit fix; npm audit fix --force; node index.js
