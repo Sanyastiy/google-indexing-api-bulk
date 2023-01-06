@@ -1,3 +1,13 @@
+// Control panel
+
+// Enable Debug console outputs for manual debug purposes
+const myDebugging = false;
+// amount of URLs per batch (limitation per operation is 100 per batch, 200 per day or 24h)
+const howMuchUrls = 1;
+
+// END of Control panel
+
+
 // Legacy(hehe) block 
 const fs = require('fs'); // to read txt file properly
 const clc = require('cli-color'); // for console colors
@@ -14,17 +24,6 @@ const jwtClient = new google.auth.JWT(
 );
 // END of Legacy block
 
-
-// Control panel
-
-// Enable Debug console outputs for manual debug purposes
-const myDebugging = false;
-// amount of URLs per batch (limitation per operation is 100 per batch, 200 per day or 24h)
-const howMuchUrls = 10;
-
-// END of Control panel
-
-
 // collect all urls
 const batchAll = fs
   .readFileSync('urls.txt')
@@ -33,15 +32,13 @@ const batchAll = fs
 // set first url index in current pack to send
 let batchIndexFirst = parseInt(fs.readFileSync('index.txt'));
 // catcher for end of mission
-if (batchAll.length < batchIndexFirst) {
+if (batchAll.length <= batchIndexFirst) {
   console.error(' Seems all URLs passed. Current Index is bigger, than sizeof batchAll. Setup 0 in index.txt file ');
   return;
 }
 
 // set last url index in current pack to send 
 let batchIndexLast = batchIndexFirst + howMuchUrls;
-// save last url index in file, that will be first index in next pack
-fs.writeFileSync('index.txt', batchIndexLast.toString());
 // set batch variable with selected indexes
 let batch = batchAll.slice(batchIndexFirst, batchIndexLast);
 // sum of sent urls
@@ -182,6 +179,10 @@ jwtClient.authorize(function (err, tokens) {
           errorCatcher = true;
           break;
 
+        } else if (candidateJSON.status == 'INVALID_ARGUMENT') {
+          displayArray = ([candidateJSON.message.toString()]);
+          errorCatcher = true;
+          return;
         }
         ++resultCounter;
       }
@@ -191,5 +192,12 @@ jwtClient.authorize(function (err, tokens) {
     myExtractJSON(body);
     errorCatcher ? console.log(clc.bgRed(displayArray)) : console.log(displayArray);
     console.info('Task Done. URLs sent: ', resultCounter);
+
+    // save last url index in file, that will be first index in next pack
+    if (resultCounter != howMuchUrls){
+      batchIndexLast -= (howMuchUrls-resultCounter);
+      console.error(' Seems all URLs passed. Current Index is bigger, than sizeof batchAll. Setup 0 in index.txt file ');
+    }
+    fs.writeFileSync('index.txt', batchIndexLast.toString());
   });
 });
