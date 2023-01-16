@@ -30,7 +30,7 @@
 
   #urls-counter {
     display: block;
-    width: 41px;
+    width: 220px;
     height: 41px;
     
   }
@@ -88,7 +88,7 @@
 <script>
   
   // TRUE NOT ACTUAL DATA
-  const showtime = true;
+  const showtime = false;
   // FALSE ACTUAL
 
   function updateIframe() {
@@ -322,7 +322,17 @@
     pawLeft.classList.remove('d-none');
     footer_span.classList.remove('d-none');
     urls_counter.classList.remove('d-none');
-    showtime?setInterval(updateIframe, 100):setInterval(updateIframe, 1000);
+    showtime?setInterval(updateIframe, 270):setInterval(updateIframe, 670);
+    
+    // for testing purposes
+    /* const iframe = document.querySelector("#urls-counter");
+    // Modify the src attribute to update the iframe content
+    if (showtime) {
+      iframe.src = "frontend/showtime.html?time=" + Date.now();
+    } else {
+      iframe.src = "index.txt?time=" + Date.now();
+    }
+    */
 
     // Loop through the elements
     for (let element of elements) {
