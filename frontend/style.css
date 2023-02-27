@@ -1,4 +1,85 @@
+/* Custom added css, transferred from ../index.html */
+@keyframes zoom {
 
+  /* Zoom in */
+  0% {
+    transform: scale(1);
+    transform-origin: center;
+  }
+
+  50% {
+    transform: scale(0.97);
+    transform-origin: center;
+  }
+
+  /* Zoom out */
+  100% {
+    transform: scale(1);
+    transform-origin: center;
+  }
+}
+
+.zoom-animation {
+  /* Apply the animation */
+  animation: zoom .411s infinite;
+  transform-origin: center;
+}
+
+#urls-counter {
+  display: block;
+  width: 220px;
+  height: 41px;
+
+}
+
+#here-we-go,
+footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100px;
+  flex-direction: column;
+}
+
+body * {
+
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: rgb(228, 228, 228);
+  text-shadow: #000033;
+}
+
+.d-none {
+  display: none !important;
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+}
+
+body {
+  background: linear-gradient(to right top, #000033, #9166ff, #8c66ff, #660099, #6600CC, #6600FF, #be33ff, #6666FF);
+  background-size: 200% 200%;
+  animation: Gradient 15s ease infinite;
+}
+
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 0%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Other, almost never changed css mostly for cat */
   .content {
     position: relative;
   }
