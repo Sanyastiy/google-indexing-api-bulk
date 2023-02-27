@@ -1,4 +1,26 @@
 /* Custom added css, transferred from ../index.html */
+
+/* Log output */
+#log-iframe-container {
+  position: absolute;
+  top: 250px;
+  right: 100px;
+  display: block;
+  width: 250px;
+  height: 45px;
+}
+
+#log-message-toggle {
+  border: 1px solid white;
+  border-radius: 8px;
+  padding: 8px;
+
+}
+
+#log-iframe {
+  margin-top: 20px;
+}
+
 @keyframes zoom {
 
   /* Zoom in */
@@ -37,8 +59,13 @@ footer {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 100px;
   flex-direction: column;
+}
+#here-we-go{
+  height: 200px;
+}
+footer{
+  height: 50px;
 }
 
 body * {
@@ -78,6 +105,10 @@ body {
     background-position: 0% 50%;
   }
 }
+#total-urls{
+  margin: 16px;
+}
+
 
 /* Other, almost never changed css mostly for cat */
   .content {
@@ -85,6 +116,7 @@ body {
   }
 
   .container {
+    margin-top: 10vh;
     display: flex;
     justify-content: center;
     height: 70vh;

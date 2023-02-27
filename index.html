@@ -1,5 +1,6 @@
-<link rel="stylesheet" type="text/css" href="frontend/style.css"/>
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap"/>
+<link rel="stylesheet" type="text/css" href="frontend/style.css" />
+<link rel="stylesheet" type="text/css"
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" />
 
 <audio id="myAudio" src="frontend/volumeupmusic.m4a" autoplay></audio>
 
@@ -10,12 +11,16 @@
   // FALSE ACTUAL
 
   function updateIframe() {
-    const iframe = document.querySelector("#urls-counter");
+    const iframe = document.getElementById("urls-counter");
+    const logIframe = document.getElementById("log-iframe");
     // Modify the src attribute to update the iframe content
     if (showtime) {
       iframe.src = "frontend/showtime.html?time=" + Date.now();
     } else {
       iframe.src = "index.txt?time=" + Date.now();
+      if (!logIframe.classList.contains('d-none')){
+        logIframe.src = "log.txt?time=" + Date.now();
+      }
     }
   }
 </script>
@@ -25,10 +30,13 @@
     <span>Start with just one click</span>
     <span style="font-weight: 400;">Reindex Requests Sent:</span>
     <iframe id="urls-counter" class="d-none" src=""></iframe>
-      <span id="total-urls" class="d-none">
-        <!-- TYPE total yours here, unfortunatelly, not possible dynamycally -->
-        Total urls: 1; Domain: a.com; Will be finished (total urls/180= 1 day, enter exact date like 1/1/2023)
-      </span>
+    <span id="total-urls" class="d-none">
+      <!-- TYPE total yours here, unfortunatelly, not possible dynamycally -->
+      Total urls: 1; Domain: a.com; Will be finished (total urls/180= 1 day, example 1/1/2023)
+    </span>
+    <div id="log-iframe-container">
+      <span id="log-message-toggle">SHOW LAST LOG MESSAGE</span>
+      <iframe id="log-iframe" class="d-none" src=""></iframe>
     </div>
   </div>
   <div class="container">
@@ -229,13 +237,26 @@
 <script>
   // Get the elements
   const content = document.querySelector(".content");
-  const bongo_cat_switch = document.querySelector("#bongo-cat");
+  const bongo_cat_switch = document.getElementById("bongo-cat");
   const pawRight = document.getElementById('paw-right');
   const pawLeft = document.getElementById('paw-left');
   const elements = content.querySelectorAll(".typing-animation-off");
   const footer_span = document.getElementById('footer-span');
   const urls_counter = document.getElementById('urls-counter');
   const total_urls = document.getElementById('total-urls');
+
+  // Log output logic
+  const log_message_toggle = document.getElementById('log-message-toggle');
+  const log_iframe = document.getElementById('log-iframe');
+  log_message_toggle.addEventListener("click", () => {
+    if (log_iframe.classList.contains('d-none')) {
+      log_iframe.classList.remove('d-none');
+      log_message_toggle.innerHTML = 'HIDE LAST LOG MESSAGE';
+    } else {
+      log_iframe.classList.add('d-none');
+      log_message_toggle.innerHTML = 'SHOW LAST LOG MESSAGE';
+    }
+  });
 
   // Add a click event listener to the content
   content.addEventListener("click", () => {
@@ -247,7 +268,7 @@
     urls_counter.classList.remove('d-none');
     total_urls.classList.remove('d-none');
 
-    showtime ? setInterval(updateIframe, 270) : setInterval(updateIframe, 670);
+    showtime ? setInterval(updateIframe, 270) : setInterval(updateIframe, 770);
 
     // Loop through the elements
     for (let element of elements) {

@@ -193,6 +193,9 @@ jwtClient.authorize(function (err, tokens) {
     errorCatcher ? console.log(clc.bgRed(displayArray)) : console.log(displayArray);
     console.info('Task Done. URLs sent: ', resultCounter);
 
+    // Write last string in logfile
+    fs.writeFileSync('log.txt', displayArray.toString());
+
     // save last url index in file, that will be first index in next pack
     if (resultCounter != howMuchUrls){
       batchIndexLast -= (howMuchUrls-resultCounter);
