@@ -2,13 +2,17 @@
 <link rel="stylesheet" type="text/css"
   href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" />
 
-<audio id="myAudio" src="frontend/volumeupmusic.m4a" autoplay></audio>
+<div id="audio-container">
+  <audio id="myAudio" src="frontend/volumeupmusic.m4a" autoplay></audio>
+</div>
 
 <script>
 
   // TRUE NOT ACTUAL DATA
   const showtime = false;
   // FALSE ACTUAL
+  // Switch between youtube and local audio
+  const localMusic = false;
 
   function updateIframe() {
     const iframe = document.getElementById("urls-counter");
@@ -233,7 +237,11 @@
   </div>
 </div>
 
-<footer><span id="footer-span" class="d-none">&#169; Volume Up Music</span></footer>
+<footer>
+  <span id="footer-span-local" class="d-none">&#169; Volume Up Music</span>
+  <span id="footer-span-youtube" class="d-none">&#169; YouTube</span>
+</footer>
+
 <script>
   // Get the elements
   const content = document.querySelector(".content");
@@ -241,7 +249,8 @@
   const pawRight = document.getElementById('paw-right');
   const pawLeft = document.getElementById('paw-left');
   const elements = content.querySelectorAll(".typing-animation-off");
-  const footer_span = document.getElementById('footer-span');
+  const footer_span_local = document.getElementById('footer-span-local');
+  const footer_span_youtube = document.getElementById('footer-span-youtube');
   const urls_counter = document.getElementById('urls-counter');
   const total_urls = document.getElementById('total-urls');
 
@@ -264,7 +273,8 @@
     bongo_cat_switch.classList.add('zoom-animation');
     pawRight.classList.remove('d-none');
     pawLeft.classList.remove('d-none');
-    footer_span.classList.remove('d-none');
+    footer_span_local.classList.remove('d-none');
+    footer_span_youtube.classList.remove('d-none');
     urls_counter.classList.remove('d-none');
     total_urls.classList.remove('d-none');
 
@@ -277,7 +287,26 @@
       // Add the typing-animation class
       element.classList.add("typing-animation");
     }
+  });
+
+  let myAudio = document.getElementById('myAudio');
+  footer_span_local.addEventListener("click", () => {
+   
+        var audio = document.createElement('audio');
+        audio.src = 'frontend/volumeupmusic.m4a';
+        audio.autoplay = true;
+        myAudio.appendChild(audio);
+    
     // play some Volume Up Music)
     document.getElementById('myAudio').play();
+  });
+  footer_span_youtube.addEventListener("click", () => {
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube.com/embed/ELUwA87klec';
+        iframe.width = '0';
+        iframe.height = '0';
+        iframe.frameborder = '0';
+        iframe.allowfullscreen = false;
+        myAudio.appendChild(iframe);
   });
 </script>
