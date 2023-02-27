@@ -33,4 +33,13 @@ style.css с основными и добавленными стилями
 2. Вставка списка урлов в urls.txt
 3. Указание общего кол-ва урлов в index.html
 4. Сброс и ввод 0 в index.txt
-5. Указание в панели сервера 
+5. Указание в панели сервера
+6. В консоли сервера выполнить в папке проекта: 
+    - npm install requests; npm audit fix; npm audit fix --force; node index.js
+7. В панели управления ранклауд сервером добавить cronjob 
+    - Vendor Binary = Write Your own, inside command
+    - Command = cd /home/runcloud/webapps/google-indexing-api-bulk; node index.js
+    - Run in = Custom settings
+    - Minutes = */8
+    - This will be the content of your cron job
+        - */8 * * * *  cd /home/runcloud/webapps/google-indexing-api-bulk; node index.js
